@@ -27,6 +27,7 @@ export class TablePanelController {
 
   @Post('/addProductOrder/:id')
   async addProductOrder(@Param() params: any, @Req() req) {
+    console.log("my product to add is", params.id)
     await this.service.addProductOrder(params.id, req?.body?.params?.quantity);
     return 'ok';
   }
@@ -49,6 +50,7 @@ export class TablePanelController {
   @Post('/close')
   async close(@Res() res) {
     await this.service.closeOrder();
+   // return res.status(200);
     return res.status(302).redirect(`${this.service.table.id}`);
   }
 

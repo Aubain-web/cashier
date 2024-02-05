@@ -1,7 +1,6 @@
 import { Product } from './product.entity';
 import { Order, OrderStatus } from './order.entity';
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { TableSchema } from './tableSchema.entity';
 
 
 export enum TypeTable {
@@ -16,7 +15,7 @@ export interface PositionSchemaInterface {
   posY: number;
 }
 
-@Entity()
+@Entity({name: 'tables'})
 export class Table {
   @PrimaryGeneratedColumn()
   id: number;
@@ -31,9 +30,7 @@ export class Table {
   posY: number;
 
   position: PositionSchemaInterface;
-
-  @ManyToOne(()=>TableSchema, tableSchema=>tableSchema.tables)
-  tableSchema : TableSchema;
+ 
   
 
   @OneToMany(() => Order, order => order.table)
@@ -61,7 +58,10 @@ export class Table {
   }
 
   public addProductOrder(product: Product, quantity: number) {
-    if (this.order == null) this.order = new Order();
+    if (this.order == null){
+      console.log("current order is null");
+       this.order = new Order();
+    }
     this.getCurrentOrder().table = this;
     // we clone the object to prevent any change of the product parameter pass by referencee
     const product_clone = Object.assign(new Product(), product);

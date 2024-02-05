@@ -1,5 +1,5 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { ProductCategory } from "./category.entity";
+import { Column, Entity, ManyToMany, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Order } from "./order.entity";
 
 
 export enum Category {
@@ -9,7 +9,7 @@ export enum Category {
   dishes = 4,
   deserts = 5,
 }
-@Entity()
+@Entity({name : "products"})
 export class Product {
   @PrimaryGeneratedColumn()
   id: number;
@@ -25,16 +25,14 @@ export class Product {
 
   @Column()
   category: number;
-
-   @ManyToOne(() => ProductCategory, productCategory => productCategory.products)
-   productCategory: ProductCategory;
+ 
 
   quantity = 1;
   total_price = 0.0;
-  orders: any;
+  orders: Order[];
 
   constructor(name = '', price = 0, pic = '', category = 1) {
-    this.id = Date.now() + Math.floor(Math.random() * 10000);
+   // this.id = Date.now() + Math.floor(Math.random() * 10000);
     this.name = name;
     this.price = price;
     this.pic = pic;

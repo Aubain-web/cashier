@@ -1,46 +1,45 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 import { Product } from './product.entity';
 import { Table } from './table.entity';
-import {PaymentMethod } from "./paymentMethod.entity";
 
 export enum OrderStatus {
   running = 0,
   paid = 1,
 }
 
-@Entity()
+@Entity({name : 'orders'})
 export class Order {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn({type: 'bigint'})
   id: number;
 
-  @Column()
+  @Column({ default: OrderStatus.running })
   status: number;
 
   @Column()
   total_price: number;
 
-  @Column()
-  date_start: number;
+  @Column({ type: 'datetime' })
+  date_start: Date;
 
-  @Column()
-  date_end: number;
+  @Column({ type: 'datetime'})
+  date_end: Date;
 
-  @ManyToOne(() => PaymentMethod, paymentMethod => paymentMethod.orders)
-  paymentMethod: PaymentMethod;
-
+ 
   @ManyToMany(() => Product, product => product.orders)
   @JoinTable()
   products: Product[];
 
-  @ManyToOne(() => Table, table => table.orders)
+  @ManyToOne(() => Table, table => table.orders, {eager: true})
   table: Table;
     payment: any;
+  quantity: any;
 
   constructor() {
     this.id = Date.now() + Math.floor(Math.random() * 10000);
     this.total_price = 0.0;
-    this.date_start = Date.now();
+    this.date_start =  new Date();
+    this.date_end = new Date();
   }
 
   public addProduct(product: Product, quantity: number) {
@@ -59,6 +58,7 @@ export class Order {
         this.products.splice(index, 1);
       }
     } else {
+      console.log("my product is added successfully")
       // otherwise, add the product to the list
       this.products.push(product);
     }
@@ -71,17 +71,20 @@ export class Order {
     let total = 0.0;
     this.products.forEach((el) => {
       el.refresh();
+      console.log(`my product with id : ${el.id} totl price is ${el.total_price}`)
       total += el.total_price;
     });
+    console.log('my order total price is', total);
     this.total_price = total;
   }
 
   public close() {
     this.status = OrderStatus.paid;
-    this.date_end = Date.now();
+  this.date_end = new Date();
   }
 
   public canClose(): boolean {
+    console.log("my order products length is ", this.products.length)
     return this.products && this.products.length > 0;
   }
 }

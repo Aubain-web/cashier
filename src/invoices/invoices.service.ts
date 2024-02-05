@@ -7,7 +7,9 @@ export class InvoicesService {
   constructor(private service: DataService) {}
 
   async getOrders(): Promise<Order[]> {
-    return await this.service.findAllClosedOrders();
+    const orders = await this.service.findAllClosedOrders();
+    console.log("my orders are: ",orders)
+    return orders;
   }
 
   async getOrder(id: number): Promise<Order> {

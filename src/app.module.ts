@@ -9,9 +9,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Table } from './entities/table.entity';
 import { Order } from './entities/order.entity';
-import { ProductCategory } from './entities/category.entity';
-import { TableSchema } from './entities/tableSchema.entity';
-import { PaymentMethod } from './entities/paymentMethod.entity';
 @Module({
   imports: [
      TypeOrmModule.forRoot({
@@ -21,7 +18,7 @@ import { PaymentMethod } from './entities/paymentMethod.entity';
        username: 'root',
        password: 'root',
        database: 'cashier',
-       entities: [Product, Table, Order, ProductCategory, TableSchema, PaymentMethod],
+       entities: [Product, Table, Order],
        synchronize: true,
      }),
     TablePanelModule,
