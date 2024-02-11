@@ -4,6 +4,7 @@ import { Order } from "./entities/order.entity";
 import { Table, TypeTable } from "./entities/table.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { IsNull, Not, Repository } from "typeorm";
+import { PaymentMethod } from "./entities/paymentMethod.entity";
 
 const PATH_IMAGE = "/public/img/food/";
 
@@ -15,10 +16,13 @@ export class DataService {
     @InjectRepository(Order)
     private ordersRepository: Repository<Order>,
     @InjectRepository(Table)
-    private tablesRepository: Repository<Table>
+    private tablesRepository: Repository<Table>,
+    @InjectRepository(PaymentMethod)
+    private paymentMethodsRepository: Repository<PaymentMethod>
   ) {
     this.seedProducts();
     this.seedTables();
+    this.seedPaymentMethods();
   }
 
   /** Public methdods */
@@ -47,6 +51,10 @@ export class DataService {
     return this.tablesRepository.find();
   }
 
+  async findAllPaymentMethods(): Promise<PaymentMethod[]> {
+  return this.paymentMethodsRepository.find();
+}
+
   findOneTable(id: number): Promise<Table | null> {
     return this.tablesRepository.findOne({
       where: {
@@ -63,6 +71,7 @@ export class DataService {
       },
     });
   }
+ 
 
   async findAllOrders(): Promise<Order[]> {
     return this.ordersRepository.find();
@@ -110,6 +119,13 @@ export class DataService {
     console.log("** End Seed tables table **");
   }
 
+  async seedPaymentMethods(): Promise<void>{
+    console.log('**seeding paymentMethod');
+    const paymentMethods: PaymentMethod[] = this.loadDefaultPaymetnMethods();
+    this.paymentMethodsRepository.save(paymentMethods);
+    console.log("** end seeding **")
+  }
+
   /** Private methods */
   private loadDefaultTables(): Table[] {
     return [
@@ -119,6 +135,21 @@ export class DataService {
       new Table(4, TypeTable.square_4, 1, 1),
       new Table(5, TypeTable.round_4, 1, 2),
     ];
+  }
+
+  private loadDefaultPaymetnMethods(): PaymentMethod[]{
+    return [
+      new PaymentMethod (
+        "Carte"
+      ),
+      new PaymentMethod( 
+        "Cash"
+       ),
+       new PaymentMethod( 
+        "Chèque"
+       ),
+
+    ]
   }
 
   private loadDefaultProducts(): Product[] {

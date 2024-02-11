@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DataService } from '../data.service';
 import { Table } from 'src/entities/table.entity';
 import { Product } from 'src/entities/product.entity';
+import { PaymentMethod } from 'src/entities/paymentMethod.entity';
 
 @Injectable()
 export class TablePanelService {
@@ -36,7 +37,7 @@ export class TablePanelService {
   async getProducts(id_category: number): Promise<Product[]> {
     return await this.service.findProductsByCategory(id_category);
   }
-
+  
   async addProductOrder(id_product: number, quantity: number) {
     const product = await this.service.findOneProduct(id_product);
     console.log("my current table is ", this.table.id);

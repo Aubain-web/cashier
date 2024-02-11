@@ -2,6 +2,7 @@ import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryColumn, Primar
 
 import { Product } from './product.entity';
 import { Table } from './table.entity';
+import { PaymentMethod } from "./paymentMethod.entity";
 
 export enum OrderStatus {
   running = 0,
@@ -30,9 +31,11 @@ export class Order {
   @JoinTable()
   products: Product[];
 
+   @ManyToOne(()=> PaymentMethod, paymentMethod => paymentMethod.orders)
+    paymentMethod : PaymentMethod
+
   @ManyToOne(() => Table, table => table.orders, {eager: true})
   table: Table;
-    payment: any;
   quantity: any;
 
   constructor() {

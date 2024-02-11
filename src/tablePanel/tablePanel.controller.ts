@@ -1,20 +1,30 @@
 import { Controller, Get, Param, Post, Render, Req, Res } from '@nestjs/common';
 import { TablePanelService } from './tablePanel.service';
 import Handlebars from 'handlebars';
+import { DataService } from 'src/data.service';
 
 @Controller('tables')
 export class TablePanelController {
-  constructor(private service: TablePanelService) {}
+  constructor(private service: TablePanelService,
+    private dataService: DataService
+    ) {}
 
   @Get()
   @Render('table-panel/table-panel.hbs')
-  index(@Res() res) {
+  async index(@Res() res) {
     // if a table has already been loaded, redirect to the concerned table page
     if (this.service.table) {
       return res.status(302).redirect(`tables/${this.service.table.id}`);
     }
-    return {};
+     const paymentMethods = await this.dataService.findAllPaymentMethods();
+
+    return {
+      paymentMethods
+    };
   }
+
+
+  
 
   @Get('/:id')
   @Render('table-panel/table-panel.hbs')
@@ -38,6 +48,7 @@ export class TablePanelController {
       products: await this.service.getProducts(params.id),
     });
   }
+  
 
   @Get('/getOrder')
   getOrder() {

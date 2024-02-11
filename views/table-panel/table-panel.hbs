@@ -15,12 +15,21 @@
                     <button class="btn btn-secondary btn-lg btn-load-products" type="button" category-id="4"><i class="fas fa-burger fa-lg"></i></button>
                     <button class="btn btn-secondary btn-lg btn-load-products" type="button" category-id="5"><i class="fas fa-cheese fa-lg"></i></button>
                 </div>
+                
+                <!-- Boutons des méthodes de paiement -->
+                <div class="d-flex flex-grow-1 flex-column justify-content-end">
+            {{#each paymentMethods}}
+            <div>{{this.name}}</div>
+            {{/each}}
+                </div>
+
+                <!-- Boutons Payer et Effacer -->
                 <div class="d-flex flex-grow-1 flex-column justify-content-end">
                     <form action="/tables/clear" method="post" class="w-100 mb-1">
-                        <input type="submit" class="btn btn-primary btn-lg w-100" type="button" value="Effacer"></button>
+                        <input type="submit" class="btn btn-primary btn-lg w-100" type="button" value="Effacer">
                     </form>
                     <form action="/tables/close" method="post" class="w-100">
-                        <input type="submit" class="btn btn-danger btn-lg  w-100" type="button" value="Payer"></button>
+                        <input type="submit" class="btn btn-danger btn-lg  w-100" type="button" value="Payer">
                     </form>
                 </div>
             </div>
@@ -29,5 +38,5 @@
         </div>
     </div>
 {{else}}
-    Pas de table séléctionnée
+    Pas de table sélectionnée
 {{/if}}
